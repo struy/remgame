@@ -9,10 +9,15 @@ QSIDE = SIDE**2//2  # count of uniq images
 def cmd():
     pass
 
-def hide_all(buttons):
-    for btn in buttons:
-        btn.config(images=faq)
 
+def hide_all(buttons):
+    """ Hide all buttons"""
+    for btn in buttons:
+        btn.configure(image=faq)
+
+
+def change(btn):
+    btn.configure(image=btn.img)
 
 main_window = Tk()
 main_window.title('Remgame')
@@ -25,18 +30,20 @@ files = files[0:QSIDE]*2
 shuffle(files)
 
 images = [PhotoImage(file=f) for f in files]
-buttons =[]
+buttons = []
 
 
 for i in range(SIDE):
     for j in range(SIDE):
-        btn = Button(main_window, image=images[i * SIDE + j], relief=FLAT, command=cmd)
+        btn = Button(main_window, image=images[i * SIDE + j], relief=FLAT)
+        btn.configure(command=lambda b=btn: change(b))
+        btn.img = images[i * SIDE + j]
         btn.grid(row=i, column=j)
         buttons.append(btn)
 
 
 
 
-main_window.after(2000,hide_all,buttons)
+main_window.after(3000, hide_all, buttons)
 main_window.mainloop()
 
