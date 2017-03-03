@@ -5,10 +5,19 @@ from random import shuffle
 SIDE = 8  # size of square
 QSIDE = SIDE**2//2  # count of uniq images
 prev = None
-
+count = 0
 
 def cmd():
     pass
+
+
+def counter(fn):
+    def _counted(*largs, **kargs):
+        _counted.invocations += 1
+        fn(*largs, **kargs)
+
+    _counted.invocations = 0
+    return _counted
 
 
 def hide_all(buttons):
@@ -22,6 +31,7 @@ def hide_both(prev, btn):
     btn.configure(image=faq)
 
 
+@counter
 def change(btn):
     global prev
     btn.configure(image=btn.img)
@@ -31,6 +41,9 @@ def change(btn):
         if prev.x != btn.x or prev is btn:
             main_window.after(1000, hide_both, prev, btn)
         prev = None
+    # print(change.invocations)
+
+
 
 main_window = Tk()
 main_window.title('Remgame')
