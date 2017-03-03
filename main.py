@@ -4,6 +4,7 @@ from random import shuffle
 
 SIDE = 8  # size of square
 QSIDE = SIDE**2//2  # count of uniq images
+prev = None
 
 
 def cmd():
@@ -16,8 +17,20 @@ def hide_all(buttons):
         btn.configure(image=faq)
 
 
+def hide_both(prev, btn):
+    prev.configure(image=faq)
+    btn.configure(image=faq)
+
+
 def change(btn):
+    global prev
     btn.configure(image=btn.img)
+    if prev is None:
+        prev = btn
+    else:
+        if prev.x != btn.x or prev is btn:
+            main_window.after(1000, hide_both, prev, btn)
+        prev = None
 
 main_window = Tk()
 main_window.title('Remgame')
@@ -37,6 +50,7 @@ for i in range(SIDE):
     for j in range(SIDE):
         btn = Button(main_window, image=images[i * SIDE + j], relief=FLAT)
         btn.configure(command=lambda b=btn: change(b))
+        btn.x = files[i*SIDE+j]
         btn.img = images[i * SIDE + j]
         btn.grid(row=i, column=j)
         buttons.append(btn)
